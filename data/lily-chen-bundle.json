@@ -1,0 +1,436 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:lily-chen-patient",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "lily-chen-001",
+        "name": [{ "given": ["Lily"], "family": "Chen" }],
+        "gender": "female",
+        "birthDate": "2020-03-15"
+      },
+      "request": { "method": "PUT", "url": "Patient/lily-chen-001" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-tall-stature",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "237837007", "display": "Tall stature" }
+          ],
+          "text": "Tall stature for age (above 97th percentile)"
+        },
+        "onsetDateTime": "2023-05-10",
+        "recordedDate": "2023-05-10",
+        "encounter": { "reference": "Encounter/lily-enc-peds-1" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-tall-stature" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-joint-hypermobility",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "298181004", "display": "Joint hypermobility" }
+          ],
+          "text": "Joint hypermobility noted on exam"
+        },
+        "onsetDateTime": "2023-05-10",
+        "recordedDate": "2023-05-10",
+        "encounter": { "reference": "Encounter/lily-enc-peds-1" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-joint-hypermobility" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-scoliosis",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "298382003", "display": "Scoliosis" }
+          ],
+          "text": "Mild thoracolumbar scoliosis"
+        },
+        "onsetDateTime": "2024-02-14",
+        "recordedDate": "2024-02-14",
+        "encounter": { "reference": "Encounter/lily-enc-ortho" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-scoliosis" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-pectus-excavatum",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "391987002", "display": "Pectus excavatum" }
+          ],
+          "text": "Pectus excavatum (sunken chest)"
+        },
+        "onsetDateTime": "2024-02-14",
+        "recordedDate": "2024-02-14",
+        "encounter": { "reference": "Encounter/lily-enc-ortho" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-pectus-excavatum" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-arachnodactyly",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "62250003", "display": "Arachnodactyly" }
+          ],
+          "text": "Arachnodactyly (long slender fingers) — noted but not followed up"
+        },
+        "onsetDateTime": "2024-02-14",
+        "recordedDate": "2024-02-14",
+        "encounter": { "reference": "Encounter/lily-enc-ortho" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-arachnodactyly" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-myopia",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "57190000", "display": "Myopia" }
+          ],
+          "text": "Progressive myopia, worsening rapidly"
+        },
+        "onsetDateTime": "2024-08-22",
+        "recordedDate": "2024-08-22",
+        "encounter": { "reference": "Encounter/lily-enc-eye" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-myopia" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-ectopia-lentis",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "9014003", "display": "Ectopia lentis" }
+          ],
+          "text": "Lens subluxation (ectopia lentis) — KEY finding"
+        },
+        "onsetDateTime": "2024-08-22",
+        "recordedDate": "2024-08-22",
+        "encounter": { "reference": "Encounter/lily-enc-eye" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-ectopia-lentis" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-mitral-valve-prolapse",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "409712001", "display": "Mitral valve prolapse" }
+          ],
+          "text": "Mitral valve prolapse found on echocardiogram"
+        },
+        "onsetDateTime": "2025-03-05",
+        "recordedDate": "2025-03-05",
+        "encounter": { "reference": "Encounter/lily-enc-cardio" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-mitral-valve-prolapse" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-aortic-root-dilation",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "128599005", "display": "Aortic root dilatation" }
+          ],
+          "text": "Aortic root dilation — DANGEROUS finding, borderline dilated"
+        },
+        "onsetDateTime": "2025-03-05",
+        "recordedDate": "2025-03-05",
+        "encounter": { "reference": "Encounter/lily-enc-cardio" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-aortic-root-dilation" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-striae",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "201101007", "display": "Striae distensae" }
+          ],
+          "text": "Stretch marks (striae) on shoulders and lower back"
+        },
+        "onsetDateTime": "2026-01-15",
+        "recordedDate": "2026-01-15",
+        "encounter": { "reference": "Encounter/lily-enc-peds-2" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-striae" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-pes-planus",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "53226007", "display": "Flat feet" }
+          ],
+          "text": "Pes planus (flat feet), bilateral"
+        },
+        "onsetDateTime": "2026-01-15",
+        "recordedDate": "2026-01-15",
+        "encounter": { "reference": "Encounter/lily-enc-peds-2" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-pes-planus" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "lily-cond-arthralgia",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "57676002", "display": "Arthralgia" }
+          ],
+          "text": "Recurrent joint pain, multiple joints"
+        },
+        "onsetDateTime": "2026-01-15",
+        "recordedDate": "2026-01-15",
+        "encounter": { "reference": "Encounter/lily-enc-peds-2" }
+      },
+      "request": { "method": "PUT", "url": "Condition/lily-cond-arthralgia" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "lily-obs-height-percentile",
+        "status": "final",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://loinc.org", "code": "59574-4", "display": "Body height percentile" }
+          ],
+          "text": "Height percentile"
+        },
+        "valueQuantity": { "value": 99, "unit": "%", "system": "http://unitsofmeasure.org", "code": "%" },
+        "effectiveDateTime": "2026-01-15",
+        "note": [{ "text": "Consistently above 97th percentile since age 3" }]
+      },
+      "request": { "method": "PUT", "url": "Observation/lily-obs-height-percentile" }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "lily-obs-arm-span-ratio",
+        "status": "final",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://loinc.org", "code": "93858-9", "display": "Arm span / Height ratio" }
+          ],
+          "text": "Arm span to height ratio"
+        },
+        "valueQuantity": { "value": 1.06, "unit": "ratio", "system": "http://unitsofmeasure.org", "code": "{ratio}" },
+        "effectiveDateTime": "2026-01-15",
+        "note": [{ "text": "Normal is <1.05. Elevated ratio suggestive of marfanoid habitus." }]
+      },
+      "request": { "method": "PUT", "url": "Observation/lily-obs-arm-span-ratio" }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "lily-obs-aortic-root-zscore",
+        "status": "final",
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "code": {
+          "coding": [
+            { "system": "http://loinc.org", "code": "59130-5", "display": "Aortic root dimension by echocardiography" }
+          ],
+          "text": "Aortic root Z-score"
+        },
+        "valueQuantity": { "value": 2.8, "unit": "Z-score", "system": "http://unitsofmeasure.org", "code": "{Zscore}" },
+        "effectiveDateTime": "2025-03-05",
+        "note": [{ "text": "Borderline dilated. Z-score >2 is considered significant. Monitor with serial echocardiograms." }],
+        "encounter": { "reference": "Encounter/lily-enc-cardio" }
+      },
+      "request": { "method": "PUT", "url": "Observation/lily-obs-aortic-root-zscore" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "FamilyMemberHistory",
+        "id": "lily-fmh-father",
+        "status": "completed",
+        "patient": { "reference": "Patient/lily-chen-001" },
+        "relationship": {
+          "coding": [
+            { "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode", "code": "FTH", "display": "Father" }
+          ]
+        },
+        "sex": {
+          "coding": [{ "system": "http://hl7.org/fhir/administrative-gender", "code": "male", "display": "Male" }]
+        },
+        "condition": [
+          {
+            "code": {
+              "coding": [{ "system": "http://snomed.info/sct", "code": "237837007", "display": "Tall stature" }],
+              "text": "Very tall (6 foot 4 inches)"
+            }
+          },
+          {
+            "code": {
+              "coding": [{ "system": "http://snomed.info/sct", "code": "298382003", "display": "Scoliosis" }],
+              "text": "Mild scoliosis diagnosed in adolescence"
+            },
+            "onsetAge": { "value": 14, "unit": "years", "system": "http://unitsofmeasure.org", "code": "a" }
+          },
+          {
+            "code": {
+              "coding": [{ "system": "http://snomed.info/sct", "code": "57190000", "display": "Myopia" }],
+              "text": "Wears glasses since age 10"
+            },
+            "onsetAge": { "value": 10, "unit": "years", "system": "http://unitsofmeasure.org", "code": "a" }
+          },
+          {
+            "code": {
+              "coding": [{ "system": "http://snomed.info/sct", "code": "298181004", "display": "Joint hypermobility" }],
+              "text": "Self-described as double-jointed"
+            }
+          }
+        ],
+        "note": [{ "text": "Father is tall (6'4\"), thin build, mild scoliosis, wears glasses since age 10, self-described as 'double-jointed'. Undiagnosed but phenotype consistent with Marfan features." }]
+      },
+      "request": { "method": "PUT", "url": "FamilyMemberHistory/lily-fmh-father" }
+    },
+    {
+      "resource": {
+        "resourceType": "FamilyMemberHistory",
+        "id": "lily-fmh-paternal-grandmother",
+        "status": "completed",
+        "patient": { "reference": "Patient/lily-chen-001" },
+        "relationship": {
+          "coding": [
+            { "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode", "code": "PGRMTH", "display": "Paternal grandmother" }
+          ]
+        },
+        "sex": {
+          "coding": [{ "system": "http://hl7.org/fhir/administrative-gender", "code": "female", "display": "Female" }]
+        },
+        "deceasedBoolean": true,
+        "condition": [
+          {
+            "code": {
+              "coding": [{ "system": "http://snomed.info/sct", "code": "56265001", "display": "Heart disease" }],
+              "text": "Died at age 45 of heart problems — possible aortic dissection"
+            },
+            "onsetAge": { "value": 45, "unit": "years", "system": "http://unitsofmeasure.org", "code": "a" }
+          }
+        ],
+        "note": [{ "text": "Paternal grandmother died suddenly at age 45 from 'heart problems'. Family suspects it may have been an aortic dissection. This is consistent with undiagnosed Marfan syndrome in the paternal lineage." }]
+      },
+      "request": { "method": "PUT", "url": "FamilyMemberHistory/lily-fmh-paternal-grandmother" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "lily-enc-peds-1",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory" },
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "period": { "start": "2023-05-10", "end": "2023-05-10" },
+        "serviceProvider": { "display": "Sunshine Pediatrics" },
+        "reasonCode": [{ "text": "Well-child visit — parent concerned about rapid growth" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/lily-enc-peds-1" }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "lily-enc-ortho",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory" },
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "period": { "start": "2024-02-14", "end": "2024-02-14" },
+        "serviceProvider": { "display": "Children's Orthopedic Associates" },
+        "reasonCode": [{ "text": "Referral for suspected scoliosis and unusual body proportions" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/lily-enc-ortho" }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "lily-enc-eye",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory" },
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "period": { "start": "2024-08-22", "end": "2024-08-22" },
+        "serviceProvider": { "display": "Metro Eye Center" },
+        "reasonCode": [{ "text": "Progressive myopia, vision worsening rapidly" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/lily-enc-eye" }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "lily-enc-cardio",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory" },
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "period": { "start": "2025-03-05", "end": "2025-03-05" },
+        "serviceProvider": { "display": "Children's Heart Specialists" },
+        "reasonCode": [{ "text": "Referral for heart murmur detected at well-child visit" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/lily-enc-cardio" }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "lily-enc-urgent-care",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory" },
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "period": { "start": "2025-11-08", "end": "2025-11-08" },
+        "serviceProvider": { "display": "Urgent Care Plus" },
+        "reasonCode": [{ "text": "Acute joint pain episode — knee and wrist" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/lily-enc-urgent-care" }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "lily-enc-peds-2",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory" },
+        "subject": { "reference": "Patient/lily-chen-001" },
+        "period": { "start": "2026-01-15", "end": "2026-01-15" },
+        "serviceProvider": { "display": "Sunshine Pediatrics" },
+        "reasonCode": [{ "text": "Follow-up — parents reporting stretch marks, flat feet, ongoing joint pain" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/lily-enc-peds-2" }
+    }
+  ]
+}
