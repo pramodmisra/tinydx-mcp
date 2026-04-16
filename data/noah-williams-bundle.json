@@ -1,0 +1,253 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "noah-williams-001",
+        "name": [{ "given": ["Noah"], "family": "Williams" }],
+        "gender": "male",
+        "birthDate": "2019-07-22"
+      },
+      "request": { "method": "PUT", "url": "Patient/noah-williams-001" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "noah-cond-seizures",
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "91175000", "display": "Seizure" }
+          ],
+          "text": "Recurrent seizures, first episode at 18 months, poorly controlled with medications"
+        },
+        "onsetDateTime": "2021-01-15",
+        "encounter": { "reference": "Encounter/noah-enc-er-1" }
+      },
+      "request": { "method": "PUT", "url": "Condition/noah-cond-seizures" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "noah-cond-dev-regression",
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "129104002", "display": "Developmental regression" }
+          ],
+          "text": "Loss of previously acquired words and motor skills starting around age 2"
+        },
+        "onsetDateTime": "2021-08-10",
+        "encounter": { "reference": "Encounter/noah-enc-neuro-1" }
+      },
+      "request": { "method": "PUT", "url": "Condition/noah-cond-dev-regression" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "noah-cond-ataxia",
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "20262006", "display": "Ataxia" }
+          ],
+          "text": "Progressive unsteady gait, frequent falls, worsening coordination"
+        },
+        "onsetDateTime": "2022-03-20",
+        "encounter": { "reference": "Encounter/noah-enc-neuro-2" }
+      },
+      "request": { "method": "PUT", "url": "Condition/noah-cond-ataxia" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "noah-cond-hypotonia",
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "398152000", "display": "Hypotonia" }
+          ],
+          "text": "Generalized low muscle tone, difficulty holding head up during examination"
+        },
+        "onsetDateTime": "2022-03-20",
+        "encounter": { "reference": "Encounter/noah-enc-neuro-2" }
+      },
+      "request": { "method": "PUT", "url": "Condition/noah-cond-hypotonia" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "noah-cond-vision-loss",
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "397540003", "display": "Visual impairment" }
+          ],
+          "text": "Progressive vision loss, no longer tracking objects reliably"
+        },
+        "onsetDateTime": "2022-09-14",
+        "encounter": { "reference": "Encounter/noah-enc-ophth" }
+      },
+      "request": { "method": "PUT", "url": "Condition/noah-cond-vision-loss" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "noah-cond-cherry-red-spot",
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "246923001", "display": "Cherry red spot of macula" }
+          ],
+          "text": "Cherry red spot observed on fundoscopic exam — KEY diagnostic finding"
+        },
+        "onsetDateTime": "2022-09-14",
+        "encounter": { "reference": "Encounter/noah-enc-ophth" }
+      },
+      "request": { "method": "PUT", "url": "Condition/noah-cond-cherry-red-spot" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "noah-cond-macrocephaly",
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "19410003", "display": "Macrocephaly" }
+          ],
+          "text": "Head circumference above 98th percentile, progressive enlargement"
+        },
+        "onsetDateTime": "2023-02-08",
+        "encounter": { "reference": "Encounter/noah-enc-peds-2" }
+      },
+      "request": { "method": "PUT", "url": "Condition/noah-cond-macrocephaly" }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "noah-cond-exaggerated-startle",
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "code": {
+          "coding": [
+            { "system": "http://snomed.info/sct", "code": "5765003", "display": "Exaggerated startle response" }
+          ],
+          "text": "Excessive startle reaction to sounds, noted since infancy but worsening"
+        },
+        "onsetDateTime": "2021-01-15",
+        "encounter": { "reference": "Encounter/noah-enc-er-1" }
+      },
+      "request": { "method": "PUT", "url": "Condition/noah-cond-exaggerated-startle" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "noah-obs-mri-brain",
+        "status": "final",
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "code": {
+          "coding": [
+            { "system": "http://loinc.org", "code": "30799-1", "display": "MRI Brain" }
+          ],
+          "text": "Brain MRI findings"
+        },
+        "valueString": "Bilateral thalamic hypointensity on T2, diffuse cerebral atrophy, white matter signal abnormalities",
+        "effectiveDateTime": "2022-04-15"
+      },
+      "request": { "method": "PUT", "url": "Observation/noah-obs-mri-brain" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "FamilyMemberHistory",
+        "id": "noah-fmh-parents",
+        "status": "completed",
+        "patient": { "reference": "Patient/noah-williams-001" },
+        "relationship": {
+          "coding": [
+            { "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode", "code": "NPRN", "display": "Natural parent" }
+          ]
+        },
+        "condition": [
+          {
+            "code": {
+              "coding": [{ "system": "http://snomed.info/sct", "code": "160343002", "display": "Consanguinity" }],
+              "text": "Parents are first cousins — consanguineous marriage"
+            }
+          }
+        ],
+        "note": [{ "text": "Both parents are healthy carriers of Ashkenazi Jewish descent. Parents are first cousins. No other affected family members known. Pattern consistent with autosomal recessive inheritance." }]
+      },
+      "request": { "method": "PUT", "url": "FamilyMemberHistory/noah-fmh-parents" }
+    },
+
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "noah-enc-er-1",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency" },
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "period": { "start": "2021-01-15" },
+        "serviceProvider": { "display": "City Children's Hospital ER" },
+        "reasonCode": [{ "text": "First seizure episode at 18 months, brought in by ambulance" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/noah-enc-er-1" }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "noah-enc-neuro-1",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory" },
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "period": { "start": "2021-08-10" },
+        "serviceProvider": { "display": "Pediatric Neurology Associates" },
+        "reasonCode": [{ "text": "Follow-up for seizures, parents report loss of words and motor skills" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/noah-enc-neuro-1" }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "noah-enc-neuro-2",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory" },
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "period": { "start": "2022-03-20" },
+        "serviceProvider": { "display": "University Medical Center Neurology" },
+        "reasonCode": [{ "text": "Second opinion — progressive neurological decline, unsteady gait" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/noah-enc-neuro-2" }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "noah-enc-ophth",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory" },
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "period": { "start": "2022-09-14" },
+        "serviceProvider": { "display": "Children's Eye Institute" },
+        "reasonCode": [{ "text": "Referral for progressive vision loss — not tracking objects" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/noah-enc-ophth" }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "noah-enc-peds-2",
+        "status": "finished",
+        "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory" },
+        "subject": { "reference": "Patient/noah-williams-001" },
+        "period": { "start": "2023-02-08" },
+        "serviceProvider": { "display": "Community Pediatrics" },
+        "reasonCode": [{ "text": "Routine check — head size growing rapidly, overall developmental decline" }]
+      },
+      "request": { "method": "PUT", "url": "Encounter/noah-enc-peds-2" }
+    }
+  ]
+}
