@@ -485,20 +485,14 @@ app.post("/mcp", validateApiKey, async (req, res) => {
     sessionIdGenerator: undefined, // Stateless mode
   });
 
-  // Inject FHIR extension into initialize response at the HTTP level.
-  // The MCP SDK's Zod schema strips unknown keys from capabilities,
-  // so we intercept res.write to patch the serialized JSON.
-  const originalWrite = res.write.bind(res);
-  const fhirExtJson = JSON.stringify(FHIR_EXTENSION);
-  res.write = function patchedWrite(chunk: unknown, ...args: unknown[]): boolean {
-    if (typeof chunk === "string" && chunk.includes('"capabilities":{') && chunk.includes('"tools":{')) {
-      chunk = chunk.replace(
-        /"capabilities":\{/,
-        `"capabilities":{"extensions":${fhirExtJson},`
-      );
-    }
-    return originalWrite(chunk, ...args);
-  } as typeof res.write;
+  // Inject FHIR extension: patch the low-level Server's capabilities directly.
+  // The McpServer's underlying Server stores capabilities as a plain object.
+  // We access it before connect() so the initialize handler returns our extension.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const lowLevelServer = (mcpServer as any).server;
+  if (lowLevelServer?._capabilities) {
+    lowLevelServer._capabilities.extensions = FHIR_EXTENSION;
+  }
 
   res.on("close", () => {
     transport.close().catch(() => {});
