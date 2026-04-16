@@ -51,6 +51,19 @@ const SERVER_INSTRUCTIONS = `TinyDx is a rare disease diagnostic navigator. To d
 
 FHIR context (server URL, access token, patient ID) flows via SHARP headers automatically.`;
 
+// FHIR extension declaration for Prompt Opinion marketplace
+const FHIR_EXTENSION = {
+  "ai.promptopinion/fhir-context": {
+    scopes: [
+      { name: "patient/Patient.rs", required: true },
+      { name: "patient/Condition.rs", required: true },
+      { name: "patient/Observation.rs", required: true },
+      { name: "patient/Encounter.rs", required: false },
+      { name: "patient/FamilyMemberHistory.rs", required: false },
+    ],
+  },
+};
+
 // ── Tool Registration ──
 // Each tool is registered on a per-request McpServer with access to the Express request
 // for SHARP header extraction. This follows the po-community-mcp stateless pattern.
@@ -401,6 +414,29 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// API key validation middleware for /mcp endpoint
+// Prompt Opinion sends the key via a custom header; name and value from env vars
+const MCP_API_KEY = process.env.MCP_API_KEY;
+const MCP_API_KEY_HEADER = (process.env.MCP_API_KEY_HEADER ?? "x-api-key").toLowerCase();
+
+function validateApiKey(req: express.Request, res: express.Response, next: express.NextFunction): void {
+  // Skip validation if no key configured (dev mode)
+  if (!MCP_API_KEY) {
+    next();
+    return;
+  }
+  const provided = req.headers[MCP_API_KEY_HEADER];
+  if (provided === MCP_API_KEY) {
+    next();
+    return;
+  }
+  res.status(401).json({
+    jsonrpc: "2.0",
+    error: { code: -32001, message: "Unauthorized: invalid or missing API key" },
+    id: null,
+  });
+}
+
 // Health check endpoint (required for Railway + Prompt Opinion)
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", server: "tinydx", version: "1.0.0" });
@@ -428,7 +464,7 @@ app.get("/", (_req, res) => {
 // ── MCP Endpoint (Streamable HTTP) ──
 // Per po-community-mcp pattern: new McpServer per request (stateless)
 
-app.post("/mcp", async (req, res) => {
+app.post("/mcp", validateApiKey, async (req, res) => {
   const mcpServer = new McpServer(
     {
       name: "tinydx",
@@ -448,6 +484,20 @@ app.post("/mcp", async (req, res) => {
   const transport = new StreamableHTTPServerTransport({
     sessionIdGenerator: undefined, // Stateless mode
   });
+
+  // Inject FHIR extension into initialize response
+  // The SDK strips 'experimental' from capabilities during serialization,
+  // so we patch the transport's send to add it back for Prompt Opinion.
+  const originalSend = transport.send.bind(transport);
+  transport.send = async (message, options) => {
+    const msg = message as Record<string, unknown>;
+    const result = msg.result as Record<string, unknown> | undefined;
+    if (result?.capabilities) {
+      const caps = result.capabilities as Record<string, unknown>;
+      caps["experimental"] = FHIR_EXTENSION;
+    }
+    return originalSend(message, options);
+  };
 
   res.on("close", () => {
     transport.close().catch(() => {});
