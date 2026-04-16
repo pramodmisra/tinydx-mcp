@@ -485,19 +485,20 @@ app.post("/mcp", validateApiKey, async (req, res) => {
     sessionIdGenerator: undefined, // Stateless mode
   });
 
-  // Inject FHIR extension into initialize response
-  // The SDK strips 'experimental' from capabilities during serialization,
-  // so we patch the transport's send to add it back for Prompt Opinion.
-  const originalSend = transport.send.bind(transport);
-  transport.send = async (message, options) => {
-    const msg = message as Record<string, unknown>;
-    const result = msg.result as Record<string, unknown> | undefined;
-    if (result?.capabilities) {
-      const caps = result.capabilities as Record<string, unknown>;
-      caps["experimental"] = FHIR_EXTENSION;
+  // Inject FHIR extension into initialize response at the HTTP level.
+  // The MCP SDK's Zod schema strips unknown keys from capabilities,
+  // so we intercept res.write to patch the serialized JSON.
+  const originalWrite = res.write.bind(res);
+  const fhirExtJson = JSON.stringify(FHIR_EXTENSION);
+  res.write = function patchedWrite(chunk: unknown, ...args: unknown[]): boolean {
+    if (typeof chunk === "string" && chunk.includes('"capabilities":{') && chunk.includes('"tools":{')) {
+      chunk = chunk.replace(
+        /"capabilities":\{/,
+        `"capabilities":{"extensions":${fhirExtJson},`
+      );
     }
-    return originalSend(message, options);
-  };
+    return originalWrite(chunk, ...args);
+  } as typeof res.write;
 
   res.on("close", () => {
     transport.close().catch(() => {});
