@@ -134,11 +134,10 @@ function registerAssembleTimeline(server: McpServer, req: IncomingMessage): void
         return { content: [{ type: "text" as const, text: "Error: patient_id is required (provide as parameter or via SHARP context)" }] };
       }
 
-      // Use SHARP FHIR server only when patient came from SHARP context;
-      // when patient_id is passed explicitly, use default HAPI FHIR
-      const fromSharp = !params.patient_id && sharpPatientId !== null;
-      const baseUrl = fromSharp ? (sharpFhir?.url ?? config.fhirBaseUrl) : config.fhirBaseUrl;
-      const token = fromSharp ? sharpFhir?.token : undefined;
+      // Always use default FHIR server (HAPI) — our synthetic patients live there.
+      // SHARP FHIR URL is ignored to prevent platform redirect to wrong server.
+      const baseUrl = config.fhirBaseUrl;
+      const token = undefined;
 
       try {
         const effectiveConfig = { ...config, fhirBaseUrl: baseUrl };
@@ -170,17 +169,12 @@ function registerExtractPhenotypes(server: McpServer, req: IncomingMessage): voi
         return { content: [{ type: "text" as const, text: "Error: patient_id is required" }] };
       }
 
-      const fromSharp = !params.patient_id && sharpPatientId !== null;
-
       try {
         let timeline;
         if (params.timeline_json) {
           timeline = JSON.parse(params.timeline_json);
         } else {
-          const baseUrl = fromSharp ? (sharpFhir?.url ?? config.fhirBaseUrl) : config.fhirBaseUrl;
-          const token = fromSharp ? sharpFhir?.token : undefined;
-          const effectiveConfig = { ...config, fhirBaseUrl: baseUrl };
-          timeline = await assembleTimeline(effectiveConfig, patientId, token);
+          timeline = await assembleTimeline(config, patientId);
         }
 
         const hpoTerms = await extractHpoTerms(config, timeline);
