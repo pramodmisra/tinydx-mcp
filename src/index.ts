@@ -127,14 +127,18 @@ function registerAssembleTimeline(server: McpServer, req: IncomingMessage): void
     },
     async (params) => {
       const sharpFhir = getSharpFhirContext(req);
-      const patientId = params.patient_id || getSharpPatientId(req);
+      const sharpPatientId = getSharpPatientId(req);
+      const patientId = params.patient_id || sharpPatientId;
 
       if (!patientId) {
         return { content: [{ type: "text" as const, text: "Error: patient_id is required (provide as parameter or via SHARP context)" }] };
       }
 
-      const baseUrl = sharpFhir?.url ?? config.fhirBaseUrl;
-      const token = sharpFhir?.token;
+      // Use SHARP FHIR server only when patient came from SHARP context;
+      // when patient_id is passed explicitly, use default HAPI FHIR
+      const fromSharp = !params.patient_id && sharpPatientId !== null;
+      const baseUrl = fromSharp ? (sharpFhir?.url ?? config.fhirBaseUrl) : config.fhirBaseUrl;
+      const token = fromSharp ? sharpFhir?.token : undefined;
 
       try {
         const effectiveConfig = { ...config, fhirBaseUrl: baseUrl };
@@ -159,19 +163,22 @@ function registerExtractPhenotypes(server: McpServer, req: IncomingMessage): voi
     },
     async (params) => {
       const sharpFhir = getSharpFhirContext(req);
-      const patientId = params.patient_id || getSharpPatientId(req);
+      const sharpPatientId = getSharpPatientId(req);
+      const patientId = params.patient_id || sharpPatientId;
 
       if (!patientId) {
         return { content: [{ type: "text" as const, text: "Error: patient_id is required" }] };
       }
+
+      const fromSharp = !params.patient_id && sharpPatientId !== null;
 
       try {
         let timeline;
         if (params.timeline_json) {
           timeline = JSON.parse(params.timeline_json);
         } else {
-          const baseUrl = sharpFhir?.url ?? config.fhirBaseUrl;
-          const token = sharpFhir?.token;
+          const baseUrl = fromSharp ? (sharpFhir?.url ?? config.fhirBaseUrl) : config.fhirBaseUrl;
+          const token = fromSharp ? sharpFhir?.token : undefined;
           const effectiveConfig = { ...config, fhirBaseUrl: baseUrl };
           timeline = await assembleTimeline(effectiveConfig, patientId, token);
         }
@@ -290,14 +297,16 @@ function registerFamilyHistory(server: McpServer, req: IncomingMessage): void {
     },
     async (params) => {
       const sharpFhir = getSharpFhirContext(req);
-      const patientId = params.patient_id || getSharpPatientId(req);
+      const sharpPatientId = getSharpPatientId(req);
+      const patientId = params.patient_id || sharpPatientId;
 
       if (!patientId) {
         return { content: [{ type: "text" as const, text: "Error: patient_id is required" }] };
       }
 
-      const baseUrl = sharpFhir?.url ?? config.fhirBaseUrl;
-      const token = sharpFhir?.token;
+      const fromSharp = !params.patient_id && sharpPatientId !== null;
+      const baseUrl = fromSharp ? (sharpFhir?.url ?? config.fhirBaseUrl) : config.fhirBaseUrl;
+      const token = fromSharp ? sharpFhir?.token : undefined;
 
       try {
         const effectiveConfig = { ...config, fhirBaseUrl: baseUrl };
