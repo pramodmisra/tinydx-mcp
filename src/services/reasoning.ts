@@ -33,6 +33,15 @@ const MODEL = "claude-sonnet-4-20250514";
 const MAX_TOKENS = 4096;
 const MAX_REASONING_STEPS = 3; // Rule 2: bounded self-reflection
 
+/** Strip markdown code fences from LLM JSON responses */
+function stripCodeFences(text: string): string {
+  let cleaned = text.trim();
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+  }
+  return cleaned.trim();
+}
+
 let _client: Anthropic | null = null;
 
 function getClient(config: TinyDxConfig): Anthropic {
@@ -88,7 +97,7 @@ IMPORTANT: Focus on phenotypic ABNORMALITIES, not normal findings. Map clinical 
   }
 
   try {
-    const parsed = JSON.parse(textContent.text) as HpoTerm[];
+    const parsed = JSON.parse(stripCodeFences(textContent.text)) as HpoTerm[];
     // Rule 5: validate output shape
     if (!Array.isArray(parsed)) {
       throw new Error("Expected array of HPO terms");
@@ -170,7 +179,7 @@ IMPORTANT: Consider the COMBINATION of phenotypes, not each individually. Rare d
 
   let parsed: { candidates: DiseaseCandidate[]; unexplainedSymptoms: string[] };
   try {
-    parsed = JSON.parse(initialText.text);
+    parsed = JSON.parse(stripCodeFences(initialText.text));
   } catch {
     throw new Error(`Failed to parse differential from AI: ${initialText.text.substring(0, 200)}`);
   }
@@ -239,7 +248,7 @@ RESPOND with JSON: {"candidates": [...], "unexplainedSymptoms": [...], "reflecti
     const refText = reflectionResponse.content.find((c) => c.type === "text");
     if (refText && refText.type === "text") {
       try {
-        refined = JSON.parse(refText.text);
+        refined = JSON.parse(stripCodeFences(refText.text));
       } catch {
         break; // If reflection parse fails, keep current results
       }
@@ -297,7 +306,7 @@ IMPORTANT: Prioritize tests that would differentiate between the top candidates.
     throw new Error("No response from pathway suggestion");
   }
 
-  const parsed = JSON.parse(text.text) as {
+  const parsed = JSON.parse(stripCodeFences(text.text)) as {
     recommendations: DiagnosticRecommendation[];
     estimatedTimeToAnswer: string;
   };
@@ -358,7 +367,7 @@ TONE: Compassionate, clear, empowering. Avoid medical jargon. If you must use a 
     throw new Error("No response from navigator report generation");
   }
 
-  const parsed = JSON.parse(text.text) as Omit<NavigatorReport, "patientId" | "patientName" | "generatedAt">;
+  const parsed = JSON.parse(stripCodeFences(text.text)) as Omit<NavigatorReport, "patientId" | "patientName" | "generatedAt">;
 
   return {
     patientId,
