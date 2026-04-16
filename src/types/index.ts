@@ -195,3 +195,42 @@ export interface TinyDxConfig {
   readonly maxHpoTerms: number;
   readonly maxFhirPages: number;
 }
+
+// ── HPO API Types ──
+
+export interface HpoSearchResult {
+  readonly id: string;       // e.g., "HP:0002650"
+  readonly name: string;     // e.g., "Scoliosis"
+}
+
+// ── Orphanet API Types ──
+
+export interface OrphanetHpoAssociation {
+  readonly hpoId: string;
+  readonly hpoTerm: string;
+  readonly frequency: string;  // e.g., "Very frequent (99-80%)"
+  readonly diagnosticCriteria: boolean;
+}
+
+export interface OrphanetDisease {
+  readonly orphaCode: number;
+  readonly name: string;
+  readonly orphanetUrl: string;
+  readonly hpoAssociations: ReadonlyArray<OrphanetHpoAssociation>;
+}
+
+export interface OrphanetNaturalHistory {
+  readonly orphaCode: number;
+  readonly name: string;
+  readonly inheritanceTypes: ReadonlyArray<string>;
+  readonly averageAgeOfOnset: ReadonlyArray<string>;
+}
+
+export interface OrphanetCrossRef {
+  readonly orphaCode: number;
+  readonly name: string;
+  readonly externalReferences: ReadonlyArray<{
+    source: string;
+    reference: string;
+  }>;
+}

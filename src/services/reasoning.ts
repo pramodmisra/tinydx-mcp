@@ -12,6 +12,12 @@
  * Power of 15: Rule 14 — No PHI in logs, API key from env
  */
 import Anthropic from "@anthropic-ai/sdk";
+import { batchValidateHpoTerms } from "./hpo.js";
+import {
+  searchDiseasesByHpoTerms,
+  getNaturalHistory,
+  calculatePhenotypeOverlap,
+} from "./orphanet.js";
 import type {
   TinyDxConfig,
   SymptomTimeline,
@@ -88,7 +94,17 @@ IMPORTANT: Focus on phenotypic ABNORMALITIES, not normal findings. Map clinical 
       throw new Error("Expected array of HPO terms");
     }
     // Rule 2: cap at maxHpoTerms
-    return parsed.slice(0, config.maxHpoTerms);
+    const capped = parsed.slice(0, config.maxHpoTerms);
+
+    // Validate against real HPO API — catches hallucinated IDs
+    try {
+      const validated = await batchValidateHpoTerms(capped);
+      console.error(`HPO validation: ${capped.length} terms → ${validated.length} validated`);
+      return validated;
+    } catch {
+      console.error("HPO validation failed — using AI-extracted terms as-is");
+      return capped; // Graceful degradation
+    }
   } catch {
     throw new Error(`Failed to parse HPO terms from AI response: ${textContent.text.substring(0, 200)}`);
   }
@@ -159,7 +175,30 @@ IMPORTANT: Consider the COMBINATION of phenotypes, not each individually. Rare d
     throw new Error(`Failed to parse differential from AI: ${initialText.text.substring(0, 200)}`);
   }
 
-  // Step 2: Self-reflection loop (DeepRare-inspired)
+  // Step 2: Orphanet cross-reference (knowledge base validation)
+  let orphanetContext = "";
+  try {
+    const patientHpoIds = hpoTerms.map((t) => t.id);
+    const orphanetDiseases = await searchDiseasesByHpoTerms(patientHpoIds);
+
+    if (orphanetDiseases.length > 0) {
+      const orphaLines: string[] = [];
+      for (const od of orphanetDiseases.slice(0, 5)) {
+        const overlap = calculatePhenotypeOverlap(patientHpoIds, od);
+        const history = await getNaturalHistory(od.orphaCode);
+        const inheritance = history?.inheritanceTypes.join(", ") ?? "unknown";
+        orphaLines.push(
+          `- ORPHA:${od.orphaCode} ${od.name} (${overlap}% phenotype overlap, inheritance: ${inheritance})`
+        );
+      }
+      orphanetContext = `\nORPHANET KNOWLEDGE BASE MATCHES:\n${orphaLines.join("\n")}`;
+      console.error(`Orphanet: ${orphanetDiseases.length} diseases found, top: ${orphanetDiseases[0].name}`);
+    }
+  } catch {
+    console.error("Orphanet cross-reference failed — proceeding with AI-only differential");
+  }
+
+  // Step 3: Self-reflection loop (DeepRare-inspired) with Orphanet evidence
   // Rule 2: bounded to MAX_REASONING_STEPS
   let refined = parsed;
   for (let step = 0; step < MAX_REASONING_STEPS; step++) {
@@ -177,6 +216,7 @@ IMPORTANT: Consider the COMBINATION of phenotypes, not each individually. Rare d
           content: `SELF-REFLECTION STEP ${step + 1}: Review and refine this rare disease differential diagnosis.
 
 PATIENT HPO TERMS: ${hpoList}
+${orphanetContext}
 
 CURRENT TOP CANDIDATE: ${topCandidate.diseaseName} (${topCandidate.confidence} confidence)
 Matching: ${topCandidate.matchingPhenotypes.join(", ")}
@@ -184,10 +224,12 @@ Unmatched: ${topCandidate.unmatchedPhenotypes.join(", ")}
 Reasoning: ${topCandidate.reasoning}
 
 QUESTIONS TO CONSIDER:
-1. Are there phenotypes in the patient that CONTRADICT this diagnosis?
-2. Is there a BETTER candidate that explains MORE of the patient's phenotypes?
-3. Are the unmatched phenotypes pointing to a DIFFERENT or ADDITIONAL condition?
+1. Do the Orphanet knowledge base matches confirm or contradict the AI ranking?
+2. Are there phenotypes in the patient that CONTRADICT this diagnosis?
+3. Is there a BETTER candidate that explains MORE of the patient's phenotypes?
+4. Are the unmatched phenotypes pointing to a DIFFERENT or ADDITIONAL condition?
 
+Use the Orphanet phenotype overlap percentages and inheritance patterns as evidence.
 If adjustments are needed, provide updated candidates. If the current ranking is sound, confirm it.
 RESPOND with JSON: {"candidates": [...], "unexplainedSymptoms": [...], "reflectionNote": "brief note on what changed or why ranking held"}`,
         },
